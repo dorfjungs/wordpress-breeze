@@ -1,0 +1,3 @@
+<?php /** Fallback Template */ ?>
+
+default

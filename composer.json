@@ -1,0 +1,86 @@
+{
+  "name": "wordpress-breeze/core",
+  "description": "wordpress-breeze/core",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "wikimedia/composer-merge-plugin": "dev-master",
+    "php": ">=7.1",
+    "johnpbloch/wordpress": "^5",
+    "advanced-custom-fields/advanced-custom-fields-pro": "*",
+    "stoutlogic/acf-builder": "^1",
+    "twig/twig": "1.32",
+    "timber/timber": "1.6",
+    "dorfjungs/wp-breeze": "dev-dev",
+    "wp-media/wp-rocket": "3.4.1.2",
+    "wpackagist-plugin/post-duplicator": "^2",
+    "wpackagist-plugin/better-wp-security": "^7.5.0",
+    "wpackagist-plugin/classic-editor": "^1",
+    "wpackagist-plugin/wp-mail-smtp":"^1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Breeze\\": "content/themes/breeze/src/"
+    }
+  },
+  "extra": {
+    "wordpress-install-dir": "wordpress",
+    "installer-paths": {
+      "content/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ]
+    },
+    "merge-plugin": {
+      "include": [
+        "/var/www/app/composer/composer.json"
+      ],
+      "recurse": true,
+      "replace": false,
+      "ignore-duplicates": false,
+      "autoload": false,
+      "merge-dev": true,
+      "merge-extra": false,
+      "merge-extra-deep": false,
+      "merge-scripts": false
+    }
+  },
+  "scripts": {
+    "post-update-cmd": [
+      "cd /var/www/app/content/plugins/wp-rocket && composer install"
+    ]
+  },
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "advanced-custom-fields/advanced-custom-fields-pro",
+        "version": "5.7.13",
+        "type": "wordpress-plugin",
+        "dist": {
+          "type": "zip",
+          "url": "https://connect.advancedcustomfields.com/index.php?p=pro&a=download"
+        },
+        "require": {
+          "philippbaschke/acf-pro-installer": "^1.0",
+          "composer/installers": "^1.0"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "a5hleyrich/wp-background-processing",
+        "version": "1.3",
+        "source": {
+          "url": "https://github.com/tabrisrp/wp-background-processing",
+          "type": "git",
+          "reference": "master"
+        }
+      }
+    },
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  ]
+}
