@@ -6,7 +6,7 @@ I am asking myself the same question and couldn't find an answer to that - yet.
 This is simply a basic setup for a specific wordpress architecture to reduce the pain for the developers. It's packed into a docker container. So you basically have a package with the basic stuff required for a minimal wordpress setup (including plugins, settings, users etc.). You're welcome. You only need to attach the corresponding volumes in order to customize the instance. Sounds pretty simple? It is, indeed. But don't get me wrong, wordpress still sucks on a very high level and it will suck as long as there are developers supporting (and using) it. Me included, per se. So consider this package a painkiller for the agony that comes with wordpress.
 
 ## Usage
-To use this package you can just pull the latest image version from [dockerhub](https://hub.docker.com/r/dorfjungs/wordpress-breeze). The dockerhub covers things like initially installing plugins, creating an admin user with a defined password, creating the database from scratch, injecting the config from the user, dynamically handling wordpress templates (a.k.a pages in this context).
+To use this package you can just pull the latest image version from [dockerhub](https://hub.docker.com/r/dorfjungs/wordpress-breeze). This package covers things like initially installing plugins, creating an admin user with a defined password, creating the database from scratch, injecting the config from the user, dynamically handling wordpress templates (a.k.a pages in this context).
 
 ### Integrate inside docker-compose
 To use the package inside your a `docker-compose.yml` you can either reference the image directly or create a new `Dockerfile` if you want to do some customization to the base distribution. A basic setup for docker-compose could look like this:
@@ -15,11 +15,11 @@ To use the package inside your a `docker-compose.yml` you can either reference t
 app:
   image: dorfjungs/wordpress-breeze:v1.0
   volumes:
-    vendor:/var/www/app/vendor
-    composer:/var/www/app/composer
-    src:/var/www/app/content/themes/breeze/src
-    assets:/var/www/app/content/themes/breeze/templates
-    uploads:/var/www/app/content/uploads
+    src:/var/mnt/src
+    vendor:/var/mnt/vendor
+    assets:/var/mnt/assets
+    uploads:/var/mnt/uploads
+    composer:/var/mnt/composer
   environment:
     WORDPRESS_HOST: yourpage.localhost
     WORDPRESS_TITLE: yourPage
