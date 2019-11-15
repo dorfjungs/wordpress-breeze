@@ -57,12 +57,20 @@ WORKDIR /var/www/app
 COPY . /var/www/app
 
 # Expose volumes
-VOLUME /var/www/app/content/themes/breeze/src
-VOLUME /var/www/app/content/themes/breeze/assets
-VOLUME /var/www/app/content/themes/breeze/templates
-VOLUME /var/www/app/content/uploads
-VOLUME /var/www/app/vendor
-VOLUME /var/www/app/composer
+VOLUME /var/mnt/src
+VOLUME /var/mnt/assets
+VOLUME /var/mnt/templates
+VOLUME /var/mnt/composer
+VOLUME /var/mnt/uploads
+VOLUME /var/mnt/vendor
+
+# Create symlinks
+RUN ln -s /var/www/app/content/themes/breeze/src /var/mnt/src
+RUN ln -s /var/www/app/content/themes/breeze/assets /var/mnt/assets
+RUN ln -s /var/www/app/content/themes/breeze/templates /var/mnt/templates
+RUN ln -s /var/www/app/content/uploads /var/mnt/uploads
+RUN ln -s /var/www/app/vendor /var/mnt/vendor
+RUN ln -s /var/www/app/composer /var/mnt/composer
 
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh

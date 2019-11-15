@@ -31,8 +31,6 @@ class Application extends \WpBreeze\Application {
     $this->addActions($config['wp_breeze_actions']);
     $this->registerOptionPages($config['acf_breeze_option_pages']);
     $this->syncPages();
-
-    remove_menu_page('plugins.php');
   }
 
   /**

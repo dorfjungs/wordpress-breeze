@@ -68,7 +68,7 @@ define('DB_NAME', env('DATABASE_NAME', 'wodpress-breeze'));
 define('DB_USER', env('DATABASE_USER', 'root'));
 
 /** MySQL database password */
-define('DB_PASSWORD', env('DATABASE_PASSWORD', ''));
+define('DB_PASSWORD', env('DATABASE_PASS', ''));
 
 /** MySQL hostname */
 define('DB_HOST', env('DATABASE_HOST', 'localhost'));
