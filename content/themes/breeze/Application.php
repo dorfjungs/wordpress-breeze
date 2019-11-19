@@ -15,6 +15,11 @@ class Application extends \WpBreeze\Application {
   public static $name = 'base';
 
   /**
+   * @var string
+   */
+  protected $resourcePath = 'assets';
+
+  /**
    * @var array
    */
   protected $config = [];
