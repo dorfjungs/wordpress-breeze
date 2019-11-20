@@ -50,6 +50,7 @@ app:
 | WORDPRESS_HOST | yes | The host (domain) used for the instance
 | WORDPRESS_TITLE | yes | The title of your wordpress site
 | ADMIN_PASSWORD | yes | The password used for the initial admin user
+| PERMALINK_STRUCTURE | no | The permalink structure to use. Default: /blog/%postname%/
 | ACF_PRO_KEY | no | The ACF pro key used for the installation
 | WP_ROCKET_EMAIL | no | The mail address for wp-rocket pro
 | WP_ROCKET_KEY | no | The wp rocket pro key

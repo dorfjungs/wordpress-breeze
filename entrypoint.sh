@@ -1,11 +1,12 @@
 #!/bin/bash
+set -e
 
 # Install composer deps
 composer install \
-  --no-scripts \
-  --no-autoloader \
-  --no-interaction \
-  --prefer-dist
+    --no-scripts \
+    --no-autoloader \
+    --no-interaction \
+    --prefer-dist
 composer update --lock
 
 # Optimize auto loader
