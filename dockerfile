@@ -27,12 +27,12 @@ VOLUME /var/mnt/uploads
 VOLUME /var/mnt/vendor
 
 # Create symlinks
-RUN ln -s /var/www/app/content/themes/breeze/src /var/mnt/src
-RUN ln -s /var/www/app/content/themes/breeze/assets /var/mnt/assets
-RUN ln -s /var/www/app/content/themes/breeze/templates /var/mnt/templates
-RUN ln -s /var/www/app/content/uploads /var/mnt/uploads
-RUN ln -s /var/www/app/vendor /var/mnt/vendor
-RUN ln -s /var/www/app/composer /var/mnt/composer
+RUN ln -s /var/mnt/src /var/www/app/content/themes/breeze/src
+RUN ln -s /var/mnt/assets /var/www/app/content/themes/breeze/assets
+RUN ln -s /var/mnt/templates /var/www/app/content/themes/breeze/templates
+RUN ln -s /var/mnt/uploads /var/www/app/content/uploads
+RUN ln -s /var/mnt/vendor /var/www/app/vendor
+RUN ln -s /var/mnt/composer /var/www/app/composer
 
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www/app

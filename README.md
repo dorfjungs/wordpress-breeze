@@ -38,6 +38,7 @@ app:
 | /var/mnt/assets | yes | Images, fonts, scripts, styles etc.
 | /var/mnt/templates | yes | All twig templates for views, partials etc.
 | /var/mnt/uploads | yes | The uploads folder to keep data persistent
+| /var/mnt/templates | yes | The twig templates used for the views
 
 ### Available environment variables
 | Name | Required  | Description |
