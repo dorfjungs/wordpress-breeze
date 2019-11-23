@@ -15,24 +15,27 @@ RUN a2dissite 000-default.conf && a2ensite 0-wordpress.conf
 # Define root html dir as work dir
 WORKDIR /var/www/app
 
+# Define theme dir
+ENV THEME_DIR=/var/www/app/content/themes/breeze
+
 # Add app
 COPY . /var/www/app
 
 # Expose volumes
-VOLUME /var/mnt/src
-VOLUME /var/mnt/assets
-VOLUME /var/mnt/templates
-VOLUME /var/mnt/composer
-VOLUME /var/mnt/uploads
-VOLUME /var/mnt/vendor
+VOLUME /var/mnt/src \
+       /var/mnt/assets \
+       /var/mnt/templates \
+       /var/mnt/composer \
+       /var/mnt/uploads \
+       /var/mnt/vendor
 
-# Create symlinks
-RUN ln -s /var/mnt/src /var/www/app/content/themes/breeze/src
-RUN ln -s /var/mnt/assets /var/www/app/content/themes/breeze/assets
-RUN ln -s /var/mnt/templates /var/www/app/content/themes/breeze/templates
-RUN ln -s /var/mnt/uploads /var/www/app/content/uploads
-RUN ln -s /var/mnt/vendor /var/www/app/vendor
-RUN ln -s /var/mnt/composer /var/www/app/composer
+# Create symlink
+RUN ln -sf /var/mnt/src $THEME_DIR/src && \
+    ln -sf /var/mnt/assets/ $THEME_DIR/assets && \
+    ln -sf /var/mnt/templates $THEME_DIR/templates && \
+    ln -sf /var/mnt/uploads /var/www/app/content/uploads && \
+    ln -sf /var/mnt/vendor /var/www/app/vendor && \
+    ln -sf /var/mnt/composer /var/www/app/composer
 
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www/app
