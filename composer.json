@@ -7,7 +7,6 @@
     "wikimedia/composer-merge-plugin": "dev-master",
     "php": ">=7.1",
     "johnpbloch/wordpress": "^5",
-    "advanced-custom-fields/advanced-custom-fields-pro": "*",
     "stoutlogic/acf-builder": "^1",
     "twig/twig": "1.32",
     "timber/timber": "1.6",
@@ -16,7 +15,8 @@
     "wpackagist-plugin/post-duplicator": "^2",
     "wpackagist-plugin/better-wp-security": "^7.5.0",
     "wpackagist-plugin/classic-editor": "^1",
-    "wpackagist-plugin/wp-mail-smtp":"^1"
+    "wpackagist-plugin/wp-mail-smtp":"^1",
+    "advanced-custom-fields/advanced-custom-fields-pro": "*"
   },
   "autoload": {
     "psr-4": {
@@ -54,15 +54,15 @@
       "type": "package",
       "package": {
         "name": "advanced-custom-fields/advanced-custom-fields-pro",
-        "version": "5.7.13",
+        "version": "5.8.3",
         "type": "wordpress-plugin",
         "dist": {
           "type": "zip",
-          "url": "https://connect.advancedcustomfields.com/index.php?p=pro&a=download"
+          "url": "https://connect.advancedcustomfields.com/index.php?a=download&p=pro&k={%ACF_PRO_KEY}&t=5.8.3"
         },
         "require": {
-          "philippbaschke/acf-pro-installer": "^1.0",
-          "composer/installers": "^1.0"
+          "composer/installers": "^1.4",
+          "ffraenz/private-composer-installer": "^3.0"
         }
       }
     },
