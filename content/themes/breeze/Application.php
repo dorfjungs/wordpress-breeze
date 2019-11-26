@@ -36,6 +36,10 @@ class Application extends \WpBreeze\Application {
     $this->addActions($config['wp_breeze_actions']);
     $this->registerOptionPages($config['acf_breeze_option_pages']);
     $this->syncPages();
+
+    // if (DEVELOPMENT) {
+    //   exec(' cd ../../../patternlab-core && php core/console --generate');
+    // }
   }
 
   /**
