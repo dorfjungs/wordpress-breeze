@@ -38,69 +38,92 @@ function wasFileModified {
   echo false
 }
 
-composer0Modified=$(wasFileModified $COMPOSER_CORE composer0 $(pwd))
-composer1Modified=$(wasFileModified $COMPOSER_CONSUMER composer1 $(pwd))
+# Wait for datbabse to be available
+case $DATABASE_HOST in
+  (*:*) DB_HOST=${DATABASE_HOST%:*} DB_PORT=${DATABASE_HOST##*:};;
+  (*) DB_HOST=$DATABASE_HOST DB_PORT=3306;;
+esac
 
-if [ "$composer0Modified" == true ] || [ "$composer1Modified" == true ]; then
-  # Install composer deps
-  composer install \
-      --no-scripts \
-      --no-autoloader \
-      --no-interaction \
-      --prefer-dist
+echo -n "Waiting for ${DB_HOST}:${DB_PORT}..."
+sh /wait-for.sh "${DB_HOST}:${DB_PORT}" -t 60
+echo " OK"
 
-  composer update --lock
+# Handle composer dependencies
+if \
+  [ ! -z "$APPLICATION_ENV" ] && \
+  [ "$APPLICATION_ENV" == 'dev' ] || \
+  [ "$APPLICATION_ENV" == 'development' ]; then
+    composer0Modified=$(wasFileModified $COMPOSER_CORE composer0 $(pwd))
+    composer1Modified=$(wasFileModified $COMPOSER_CONSUMER composer1 $(pwd))
 
-  # Optimize auto loader
-  composer dump-autoload --optimize
+    if [ "$composer0Modified" == true ] || [ "$composer1Modified" == true ]; then
+      # Install composer deps
+      composer install \
+          --no-scripts \
+          --no-autoloader \
+          --no-interaction \
+          --prefer-dist
 
-  if [ $? -eq 0 ]; then
-    lockModifiedFile $COMPOSER_CORE composer0 $(pwd)
-    lockModifiedFile $COMPOSER_CONSUMER composer1 $(pwd)
-  fi
+      composer update --lock
 
-  lockModifiedFile $COMPOSER_CORE composer0 $(pwd)
-  lockModifiedFile $COMPOSER_CONSUMER composer1 $(pwd)
+      # Optimize auto loader
+      composer dump-autoload --optimize
+
+      if [ $? -eq 0 ]; then
+        lockModifiedFile $COMPOSER_CORE composer0 $(pwd)
+        lockModifiedFile $COMPOSER_CONSUMER composer1 $(pwd)
+      fi
+
+      lockModifiedFile $COMPOSER_CORE composer0 $(pwd)
+      lockModifiedFile $COMPOSER_CONSUMER composer1 $(pwd)
+    else
+      echo "The Composer configs are unchanged: Skipping updates!"
+    fi
 else
-  echo "The Composer configs are unchanged: Skipping updates..."
+  echo "Skipping composer install for production!"
 fi
 
-# Install wordpress core
+# Install or import wordpress core
 if [ -z "${SKIP_WP_CORE_INSTALL}" ]; then
   if ! $(wp --allow-root core is-installed); then
-    wp --allow-root core install \
-      --title=${WORDPRESS_TITLE:-breeze} \
-      --admin_user=${ADMIN_USER:-admin} \
-      --admin_email=${ADMIN_EMAIL:-admin@admin.com} \
-      --admin_password=${ADMIN_PASSWORD:-admin} \
-      --url=${WORDPRESS_HOST}
+    if [ ! -z "$(ls -A /var/mnt/exports)" ]; then
+      bash ./scripts/import.sh
+    else
+      wp --allow-root core install \
+        --title=${WORDPRESS_TITLE:-breeze} \
+        --admin_user=${ADMIN_USER:-admin} \
+        --admin_email=${ADMIN_EMAIL:-admin@admin.com} \
+        --admin_password=${ADMIN_PASSWORD:-admin} \
+        --url=${WORDPRESS_HOST}
 
-    # Activate default plugins
-    wp --allow-root plugin activate \
-      post-duplicator \
-      better-wp-security \
-      classic-editor \
-      wp-mail-smtp \
-      advanced-custom-fields-pro \
-      wp-rocket
+      # Activate default plugins
+      wp --allow-root plugin activate \
+        post-duplicator \
+        better-wp-security \
+        classic-editor \
+        wp-mail-smtp \
+        advanced-custom-fields-pro \
+        wp-rocket
 
-    # Ensure correct permalink structure
-    wp --allow-root option set permalink_structure ${PERMALINK_STRUCTURE:-'/blog/%postname%/'}
+      # Ensure correct permalink structure
+      wp --allow-root option set permalink_structure ${PERMALINK_STRUCTURE:-'/blog/%postname%/'}
 
-    # Enable breeze theme
-    wp --allow-root theme activate breeze
+      # Enable breeze theme
+      wp --allow-root theme activate breeze
 
-    # Ensure default posts to be removed
-    wp --allow-root post delete 1 2 3
+      # Ensure default posts to be removed
+      wp --allow-root post delete 1 2 3
+    fi
   else
-    echo "Wordpress is already insalled: Skipping install..."
+    echo "Wordpress is already installed: Skipping install!"
   fi
 else
-  echo "Wordpress core installation was disabled: Skipping install..."
+  echo "Wordpress core installation was disabled: Skipping install!"
 fi
 
 # Ensure correct permissions
 chown -R www-data:www-data /var/www/app/content
+chown -R www-data:www-data /var/mnt/uploads
 
 # Launch apache2
 exec docker-php-entrypoint apache2-foreground

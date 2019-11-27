@@ -1,5 +1,10 @@
 FROM davideperozzi/apache-php:7.3
 
+# Install netcat
+RUN apt-get -q update && apt-get -qy install \
+    netcat \
+  && rm -r /var/lib/apt/lists/*
+
 # Install wp-cli
 RUN apt-get update && apt-get install nano
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x ./wp-cli.phar && mv wp-cli.phar /usr/bin/wp
@@ -28,7 +33,8 @@ VOLUME /var/mnt/src \
        /var/mnt/templates \
        /var/mnt/composer \
        /var/mnt/uploads \
-       /var/mnt/vendor
+       /var/mnt/vendor \
+       /var/mnt/exports
 
 # Create symlink
 RUN ln -sf /var/mnt/src $THEME_DIR/src && \
@@ -44,5 +50,9 @@ RUN chown -R www-data:www-data /var/www/app
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x entrypoint.sh
+
+# Download wait-for
+RUN wget -O /wait-for.sh https://raw.githubusercontent.com/eficode/wait-for/8d9b4446df0b71275ad1a1c68db0cc2bb6978228/wait-for
+RUN chmod +x /wait-for.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
