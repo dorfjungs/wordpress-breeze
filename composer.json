@@ -16,7 +16,8 @@
     "wpackagist-plugin/better-wp-security": "^7.5.0",
     "wpackagist-plugin/classic-editor": "^1",
     "wpackagist-plugin/wp-mail-smtp":"^1",
-    "advanced-custom-fields/advanced-custom-fields-pro": "*"
+    "advanced-custom-fields/advanced-custom-fields-pro": "*",
+    "pattern-lab/edition-twig-standard": "*"
   },
   "autoload": {
     "psr-4": {
@@ -46,7 +47,10 @@
   },
   "scripts": {
     "post-update-cmd": [
-      "cd /var/www/app/content/plugins/wp-rocket && composer install"
+      "cd /var/www/app/content/plugins/wp-rocket && composer install",
+      "cd /var/www/app/vendor/pattern-lab/edition-twig-standard && composer install",
+      "cd /var/www/app/vendor/pattern-lab/edition-twig-standard && php core/console --config --set publicDir=../../../../www/app/patternlab",
+      "cd /var/www/app/vendor/pattern-lab/edition-twig-standard && php core/console --config --set sourceDir=/../../../templates"
     ]
   },
   "repositories": [
