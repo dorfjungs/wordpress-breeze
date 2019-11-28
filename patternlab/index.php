@@ -1,10 +1,10 @@
 <?php
 
 // if (DEVELOPMENT) {
-  shell_exec('php /var/www/app/vendor/pattern-lab/edition-twig-standard/core/console --generate');
+  // shell_exec('php /var/www/app/vendor/pattern-lab/edition-twig-standard/core/console --generate');
 // }
 
-require('../_patternlab/index.html');
+require('index.html');
 
 
 

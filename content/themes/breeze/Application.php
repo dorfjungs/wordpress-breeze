@@ -30,12 +30,17 @@ class Application extends \WpBreeze\Application {
   public function __construct($config = []) {
     parent::__construct(static::$name);
 
+    // if (DEVELOPMENT) {
+    //   exec(' cd ../../../vendor/pattern-lab/edition-twig-standard/core/console --generate');
+    // }
+
     $this->config = $config;
 
     $this->addViewHelpers($config['wp_breeze_view_helpers']);
     $this->addActions($config['wp_breeze_actions']);
     $this->registerOptionPages($config['acf_breeze_option_pages']);
     $this->syncPages();
+
   }
 
   /**
