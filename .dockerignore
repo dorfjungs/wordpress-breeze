@@ -1,4 +1,5 @@
 .git
+docs
 Dockerfile
 .editorconfig
 *.modlock
