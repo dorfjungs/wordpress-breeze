@@ -3,10 +3,10 @@ FROM davideperozzi/apache-php:7.3
 # Install netcat
 RUN apt-get -q update && apt-get -qy install \
     netcat \
+    bsdtar \
   && rm -r /var/lib/apt/lists/*
 
 # Install wp-cli
-RUN apt-get update && apt-get install nano
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x ./wp-cli.phar && mv wp-cli.phar /usr/bin/wp
 RUN echo 'alias wp="wp --allow-root"' >>  ~/.bashrc
 

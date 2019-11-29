@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteBase /patternlab/
+
+RewriteRule ^patterns/(.*)$ pattern/public/patterns/$1
+RewriteRule ^styleguide/(.*)$ pattern/public/styleguide/$1
+RewriteRule ^annotations/(.*)$ pattern/public/annotations/$1
+RewriteRule ^patternlab-components/(.*)$ pattern/public/patternlab-components/$1

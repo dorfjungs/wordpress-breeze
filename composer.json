@@ -47,10 +47,7 @@
   },
   "scripts": {
     "post-update-cmd": [
-      "cd /var/www/app/content/plugins/wp-rocket && composer install",
-      "cd /var/www/app/vendor/pattern-lab/edition-twig-standard && composer install",
-      "php /var/www/app/vendor/pattern-lab/edition-twig-standard/core/console --config --set publicDir=../../../../www/app/patternlab",
-      "php /var/www/app/vendor/pattern-lab/edition-twig-standard/core/console --config --set sourceDir=/../../../templates"
+      "cd /var/www/app/content/plugins/wp-rocket && composer install"
     ]
   },
   "repositories": [
