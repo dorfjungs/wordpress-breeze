@@ -5,8 +5,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source $DIR/replace.sh
 
 BASE_DIR=/var/mnt/exports
-SQLDUMP_EXPORT=$(ls $BASE_DIR/sqldump_* | sort -n -t _ -k 2 | tail -1)
-UPLOADS_EXPORT=$(ls $BASE_DIR/uploads_* | sort -n -t _ -k 2 | tail -1)
+SQLDUMP_EXPORT=$(ls $BASE_DIR/sqldump_* 2> /dev/null | sort -n -t _ -k 2 | tail -1)
+UPLOADS_EXPORT=$(ls $BASE_DIR/uploads_* 2> /dev/null | sort -n -t _ -k 2 | tail -1)
 
 if [ -z "$SQLDUMP_EXPORT" ]; then
   echo "ERR: No sqldump found to be imported!"
