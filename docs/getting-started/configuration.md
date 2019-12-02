@@ -34,6 +34,7 @@ Environment variables can define specific behavior and information for wordpress
 | WP_ROCKET_EMAIL | no | The mail address for wp-rocket pro
 | WP_ROCKET_KEY | no | The wp rocket pro key
 | PATTERNLAB | no | Set to 1 if pattternlab should be installed
+| RESET_DATABASE_ON_STARTUP | no | Set this to 1 if you want to reset the database on startup. Useful for test & staging environments
 
 ## Adding composer packages
 To add composer packages from the consumer the container will merge his own `composer.json` with the one located in `/var/mnt/composer`.

@@ -109,10 +109,23 @@ else
   echo "Skipping composer install for production!"
 fi
 
+# Resetting database if necessary
+if [ ! -z "$RESET_DATABASE_ON_STARTUP" ] && [ "$RESET_DATABASE_ON_STARTUP" == "1" ]; then
+  if $(wp --allow-root core is-installed); then
+    echo -n "Resetting database due \"RESET_DATABASE_ON_STARTUP\"..."
+    cd /var/www/app && wp --allow-root db reset --yes --quiet
+    echo " OK"
+  else
+    echo "Skipping database reset. Wordpress is not installed!"
+  fi
+fi
+
 # Install or import wordpress core
 if [ -z "${SKIP_WP_CORE_INSTALL}" ]; then
   if ! $(wp --allow-root core is-installed); then
-    if [ ! -z "$(ls -A /var/mnt/exports)" ]; then
+    if [ ! -z "$(ls -A /var/mnt/exports/sqldump_* 2> /dev/null)" ] &&
+       [ ! -z "$(ls -A /var/mnt/exports/uploads_* 2> /dev/null)" ];
+    then
       bash ./scripts/import.sh
     else
       wp --allow-root core install \
