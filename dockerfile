@@ -4,6 +4,7 @@ FROM davideperozzi/apache-php:7.3
 RUN apt-get -q update && apt-get -qy install \
     netcat \
     bsdtar \
+    bc \
   && rm -r /var/lib/apt/lists/*
 
 # Install wp-cli
