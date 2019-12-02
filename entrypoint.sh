@@ -81,7 +81,7 @@ if \
     fi
 
     # Install patternlab if required
-    PATTERN_CONSUMER=/var/mnt/templates
+    PATTERN_CONSUMER=/var/mnt/templates/pattern
     PATTERNLAB_DIR=/var/www/app/patternlab/pattern
 
     if [ ! -z "$PATTERNLAB" ] && [ ! -d "$PATTERNLAB_DIR" ]; then
