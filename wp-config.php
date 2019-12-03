@@ -138,6 +138,9 @@ define('FORCE_SSL_ADMIN', PRODUCTION ? true : false);
  */
 $table_prefix = env('WP_TABLE_PREFIX', 'wpbr_');
 
+/** Disable WP-Cron because it sucks */
+define('DISABLE_WP_CRON', true);
+
 /**
  * For developers: WordPress debugging mode.
  *
