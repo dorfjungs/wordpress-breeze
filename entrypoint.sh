@@ -15,13 +15,6 @@ function randomSleep {
 
   echo "Sleeping for ${sleep}s"
   sleep $sleep
-
-  while (( $(echo "$current < 0.8" | bc -l) )); do
-    local sleep=$(echo "1 + $(random) * 3" | bc -l)
-    echo "Sleeping for ${sleep}s"
-    sleep $sleep
-    current=$(random)
-  done
 }
 
 function getModifiedDate {
@@ -147,8 +140,6 @@ fi
 
 # Install or import wordpress core
 if [ -z "${SKIP_WP_CORE_INSTALL}" ]; then
-  randomSleep
-
   if ! $(wp --allow-root core is-installed); then
     if [ ! -z "$(ls -A /var/mnt/exports/sqldump_* 2> /dev/null)" ] &&
        [ ! -z "$(ls -A /var/mnt/exports/uploads_* 2> /dev/null)" ];
@@ -160,7 +151,7 @@ if [ -z "${SKIP_WP_CORE_INSTALL}" ]; then
         --admin_user=${ADMIN_USER:-admin} \
         --admin_email=${ADMIN_EMAIL:-admin@admin.com} \
         --admin_password=${ADMIN_PASSWORD:-admin} \
-        --url=${WORDPRESS_HOST}
+        --url="${WORDPRESS_HOST_PROTOCOL:-http}://${WORDPRESS_HOST}"
 
       # Activate default plugins
       wp --allow-root plugin activate \
