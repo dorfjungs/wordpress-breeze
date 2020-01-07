@@ -56,5 +56,18 @@ return [
    * The pages to sync with the wordpress instance.
    * This is basically page -> controller -> view (twig)
    */
-  'wp_pages' => []
+  'wp_pages' => [],
+
+  /**
+   * The menus to add to the wordpress instance
+   */
+  'wp_menus' => [],
+
+  /**
+   * The image size formats for wordpress. A valid configuration looks
+   * like this (All items are optional):
+   *
+   * 'teaser' => [ 'width' => 600, 'height' => 800, 'crop' => false ]
+   */
+  'wp_image_sizes' => []
 ];

@@ -134,10 +134,18 @@ class Application extends \WpBreeze\Application {
    * @return void
    */
   protected function beforeImageSizeAction(ImageSizeAction &$action, &$params) {
-    $action->addSize('content', 960);
-    $action->addSize('teaser', 1024, 576, true);
-    $action->addSize('big', 1680);
-    $action->addSize('hd', 1920);
+    if (array_key_exists('wp_image_sizes', $this->config)) {
+      $sizes = $this->config['wp_image_sizes'];
+
+      foreach ($sizes as $name => $size) {
+        $action->addSize(
+          $name,
+          array_key_exists('width', $size) ? $size['width'] : 0
+          array_key_exists('height', $size) ? $size['height'] : 0
+          array_key_exists('crop', $size) ? $size['crop'] : false
+        )
+      }
+    }
   }
 
   /**
@@ -164,9 +172,8 @@ class Application extends \WpBreeze\Application {
    * @return void
    */
   protected function beforeNavMenuAction(NavMenuAction &$action, &$params) {
-    $params['menus'] = [
-      'primary' => __('Primary Menu'),
-      'meta' => __('Meta menu')
-    ];
+    if (array_key_exists('wp_menus', $this->config)) {
+      $params['menus'] = $this->config['wp_menus'];
+    }
   }
 }
