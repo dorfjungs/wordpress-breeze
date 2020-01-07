@@ -107,5 +107,15 @@ To configure your application to your needs accordingly, you have one entrypoint
  * The pages to sync with the wordpress instance.
  * This is basically page -> controller -> view (twig)
  */
-'wp_pages' => []
+'wp_pages' => [],
+
+/**
+ * The menus to add to the wordpress instance
+ */
+'wp_menus' => [],
+
+/**
+ * The image size formats for wordpress
+ */
+'wp_image_sizes' => []
 ```
