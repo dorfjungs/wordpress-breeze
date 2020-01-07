@@ -140,10 +140,10 @@ class Application extends \WpBreeze\Application {
       foreach ($sizes as $name => $size) {
         $action->addSize(
           $name,
-          array_key_exists('width', $size) ? $size['width'] : 0
-          array_key_exists('height', $size) ? $size['height'] : 0
+          array_key_exists('width', $size) ? $size['width'] : 0,
+          array_key_exists('height', $size) ? $size['height'] : 0,
           array_key_exists('crop', $size) ? $size['crop'] : false
-        )
+        );
       }
     }
   }
