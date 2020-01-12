@@ -94,7 +94,7 @@ if \
     fi
 else
   echo "Skipping composer install for production!"
-fi´
+fi
 
 # Install patternlab if required
 PATTERN_CONSUMER=/var/mnt/templates/pattern
