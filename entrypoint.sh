@@ -92,39 +92,39 @@ if \
     else
       echo "The Composer configs are unchanged: Skipping updates!"
     fi
-
-    # Install patternlab if required
-    PATTERN_CONSUMER=/var/mnt/templates/pattern
-    PATTERNLAB_DIR=/var/www/app/patternlab/pattern
-
-    if [ ! -z "$PATTERNLAB" ] && [ ! -d "$PATTERNLAB_DIR" ]; then
-      echo "Installing patternlab..."
-      cd patternlab
-      composer create-project --no-interaction pattern-lab/edition-twig-standard pattern
-
-      if [ ! -d "$PATTERN_CONSUMER" ]; then
-        echo "Copying initial pattern files..."
-        mkdir $PATTERN_CONSUMER
-        rsync -a $PATTERNLAB_DIR/source/** $PATTERN_CONSUMER
-        chown -R www-data:www-data $PATTERNLAB_DIR
-        chmod -R 777 $PATTERN_CONSUMER
-      fi
-
-      echo "Linking templates for patternlab..."
-      chown -R www-data:www-data $PATTERNLAB_DIR
-      rm -rf $PATTERNLAB_DIR/source
-      ln -sf $PATTERN_CONSUMER $PATTERNLAB_DIR/source
-      cd ..
-    else
-      echo "Skipping patternlab install!"
-    fi
 else
   echo "Skipping composer install for production!"
+fi´
+
+# Install patternlab if required
+PATTERN_CONSUMER=/var/mnt/templates/pattern
+PATTERNLAB_DIR=/var/www/app/patternlab/pattern
+
+if [ ! -z "$PATTERNLAB" ] && [ ! -d "$PATTERNLAB_DIR" ]; then
+  echo "Installing patternlab..."
+  cd patternlab
+  composer create-project --no-interaction pattern-lab/edition-twig-standard pattern
+
+  if [ ! -d "$PATTERN_CONSUMER" ]; then
+    echo "Copying initial pattern files..."
+    mkdir $PATTERN_CONSUMER
+    rsync -a $PATTERNLAB_DIR/source/** $PATTERN_CONSUMER
+    chown -R www-data:www-data $PATTERNLAB_DIR
+    chmod -R 777 $PATTERN_CONSUMER
+  fi
+
+  echo "Linking templates for patternlab..."
+  chown -R www-data:www-data $PATTERNLAB_DIR
+  rm -rf $PATTERNLAB_DIR/source
+  ln -sf $PATTERN_CONSUMER $PATTERNLAB_DIR/source
+  cd ..
+else
+  echo "Skipping patternlab install!"
 fi
 
 # Resetting database if necessary
 if [ ! -z "$RESET_DATABASE_ON_STARTUP" ] && [ "$RESET_DATABASE_ON_STARTUP" == "1" ]; then
-  # Sleep for random amount of time in order to miminize the probability
+  # Sleep for random amount of time in order to miminize the probability of
   # colliding with other replicas
   randomSleep
 
