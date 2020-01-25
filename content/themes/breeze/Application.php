@@ -52,31 +52,113 @@ class Application extends \WpBreeze\Application {
   protected function syncPages() {
     $ext = '.php';
     $pages = $this->config['wp_pages'];
-    $base = realpath(__DIR__ . '/pages');
-    $files = scandir($base);
+    $rootPath = realpath(__DIR__);
+    $pagesPath = realpath(__DIR__ . '/pages');
+    $rootFiles = scandir($rootPath);
+    $pagesFiles = scandir($pagesPath);
 
-    foreach ($files as $file) {
-      $path = $base . '/' . $file;
+    // Wordpress default templates 
+    // https://developer.wordpress.org/themes/basics/template-files/
+    $wpDefaultTemplates = [
+      'index',
+      'comments',
+      'front-page',
+      'home',
+      'singular',
+      'single',
+      'single-*',
+      'archive',
+      'archive-*',
+      'page',
+      'page-*',
+      'category',
+      'tag',
+      'taxonomy',
+      'author',
+      'date',
+      'search',
+      'attachment',
+      'image',
+      '404',
+    ];
 
-      if (
-        substr_compare($file, $ext, -strlen($ext)) === 0 &&
-        is_file($path) &&
-        ! array_key_exists(str_replace($ext, '', basename($file)), $pages)
-      ) {
+    $wpDefaultPages = [];
+    $wpCustomPages = [];
+    foreach ($pages as $pageKey => $pageValue) {
+      $wpDefaultTemplateMatched = false;
+      foreach ($wpDefaultTemplates as $wpDefaultTemplate) {
+        if ((
+            $wpDefaultTemplate == (string) $pageKey ||
+            (substr($wpDefaultTemplate, -1) === '*' 
+              && strpos($pageKey, substr($wpDefaultTemplate, 0, strlen($wpDefaultTemplate) - 1)) === 0)
+          )
+        ) {
+          $wpDefaultTemplateMatched = true;
+          break;
+        }
+      }
+
+      if ($wpDefaultTemplateMatched === true) {
+        $wpDefaultPages[] = (string) $pageKey;
+      } else {
+        $wpCustomPages[] = (string) $pageKey;
+      }
+    }
+
+    /**
+     * WordPress Default Templates Magic
+     */
+    foreach ($rootFiles as $rootFile) {
+      $path = $rootPath . '/' . $rootFile;
+      $pathInfo = pathinfo($path);
+      
+      if (!isset($pathInfo['extension']) || '.' . $pathInfo['extension'] != $ext) {
+        continue;
+      }
+
+      if (in_array($pathInfo['filename'], $wpDefaultPages)) {
         unlink($path);
       }
     }
 
-    foreach ($pages as $name => $page) {
-      $file = $base . '/' . $name . $ext;
+    foreach ($wpDefaultPages as $wpDefaultPage) {
+      $page = $pages[$wpDefaultPage];
       $name = static::$name;
       $app = "\WpBreeze\Application::get('$name')";
+      $file = $rootPath . '/' . $wpDefaultPage . $ext;
+      $fileContent = "<?php echo {$app}->controller($page[1])->render();";  
 
       if ( ! file_exists($file)) {
-        file_put_contents($file,
-          "<?php /** Template Name: $page[0] **/"
-          . "echo {$app}->controller($page[1])->render();"
-        );
+        file_put_contents($file, $fileContent);
+      }
+    }
+    
+    /**
+     * Custom Templates Magic
+     */
+    foreach ($pagesFiles as $pageFile) {
+      $path = $pagesPath . '/' . $pageFile;
+      $pathInfo = pathinfo($path);
+      
+      if (!isset($pathInfo['extension']) || '.' . $pathInfo['extension'] != $ext) {
+        continue;
+      }
+
+      if (in_array($pathInfo['filename'], $wpCustomPages)) {
+        unlink($path);
+      }
+    }
+
+    foreach ($wpCustomPages as $wpCustomPage) {
+      $page = $pages[$wpCustomPage];
+      $name = static::$name;
+      $app = "\WpBreeze\Application::get('$name')";
+      $file = $pagesPath . '/' . $wpCustomPage . $ext;
+      $fileContent = "<?php /** Template Name: $page[0] */"
+                        . "echo {$app}->controller($page[1])->render();";
+
+      if ( ! file_exists($file)) {
+        file_put_contents($file, $fileContent);
       }
     }
   }
