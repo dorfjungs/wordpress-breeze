@@ -1,21 +1,8 @@
 #!/bin/bash
 set -e
 
-RANDOM=$(date +%s%N)
 COMPOSER_CORE=./composer.json
 COMPOSER_CONSUMER=/var/mnt/composer/composer.json
-
-function random {
-  echo $(printf "%0.4f\n" $(bc -l <<< "scale=4; ${RANDOM}/32767"))
-}
-
-function randomSleep {
-  local current=$(random)
-  local sleep=$(echo "1 + $(random) * 4" | bc -l);
-
-  echo "Sleeping for ${sleep}s"
-  sleep $sleep
-}
 
 function getModifiedDate {
   if [ -f "$1" ]; then
@@ -124,10 +111,6 @@ fi
 
 # Resetting database if necessary
 if [ ! -z "$RESET_DATABASE_ON_STARTUP" ] && [ "$RESET_DATABASE_ON_STARTUP" == "1" ]; then
-  # Sleep for random amount of time in order to miminize the probability of
-  # colliding with other replicas
-  randomSleep
-
   # Check if it was already installed
   if $(wp --allow-root core is-installed); then
     echo -n "Resetting database due \"RESET_DATABASE_ON_STARTUP\"..."
