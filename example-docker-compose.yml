@@ -1,0 +1,67 @@
+version: '3.4'
+
+services:
+  app:
+    image: wp-breeze:latest
+    depends_on:
+      - database
+    restart: on-failure
+    container_name: app.${DOMAIN}
+    volumes:
+      - ./app:/var/mnt/composer
+      - ./app/src:/var/mnt/src
+      - ./app/vendor:/var/mnt/vendor
+      - ./app/assets:/var/mnt/assets
+      - ./.data/uploads:/var/mnt/uploads
+      - ./app/.exports:/var/mnt/exports
+      - ./app/templates:/var/mnt/templates
+    environment:
+      VIRTUAL_HOST: app.${DOMAIN}
+      APPLICATION_ENV: dev
+      DATABASE_HOST: database
+      DATABASE_NAME: ${APP_NAME}
+      DATABASE_USER: ${APP_NAME}
+      DATABASE_PASS: ${APP_DATABASE_PASSWORD}
+      WORDPRESS_HOST: app.${DOMAIN}
+      WORDPRESS_HOST_PROTOCOL: http
+      WORDPRESS_TITLE: ${APP_NAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ACF_PRO_KEY: b3JkZXJfaWQ9NTM5MzV8dHlwZT1kZXZlbG9wZXJ8ZGF0ZT0yMDE1LTA0LTEyIDE4OjQzOjI5
+      WP_ROCKET_EMAIL: joshua@dorfjungs.com
+      WP_ROCKET_KEY: 73f79bc5
+    ports:
+      - 80:8080
+  watcher:
+    image: watch_${APP_NAME}:latest
+    container_name: watcher.${DOMAIN}
+    build:
+      context: ./app
+      dockerfile: watcher.dockerfile
+    ports:
+      - 35729:35729
+    volumes:
+      - ./app/assets:/app/assets
+
+  database:
+    image: mysql/mysql-server:5.7
+    container_name: database.${DOMAIN}
+    volumes:
+      - ./.data/database:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: ${APP_NAME}
+      MYSQL_USER: ${APP_NAME}
+      MYSQL_PASSWORD: ${APP_DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${APP_DATABASE_PASSWORD}
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: pma.${DOMAIN}
+    environment:
+      VIRTUAL_PORT: 80
+      VIRTUAL_HOST: pma.${DOMAIN}
+      PMA_HOSTS: database.${DOMAIN}
+      PMA_USER: ${APP_NAME}
+      PMA_PASSWORD: ${APP_DATABASE_PASSWORD}
