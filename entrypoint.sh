@@ -129,9 +129,9 @@ if [ ! -z "$RESET_DATABASE_ON_STARTUP" ] && [ "$RESET_DATABASE_ON_STARTUP" == "1
   randomSleep
 
   # Check if it was already installed
-  if $(wp --allow-root core is-installed); then
+  if $(wp core is-installed); then
     echo -n "Resetting database due \"RESET_DATABASE_ON_STARTUP\"..."
-    cd /var/www/app && wp --allow-root db reset --yes --quiet
+    cd /var/www/app && wp db reset --yes --quiet
     echo " OK"
   else
     echo "Skipping database reset. Wordpress is not installed!"
@@ -140,13 +140,13 @@ fi
 
 # Install or import wordpress core
 if [ -z "${SKIP_WP_CORE_INSTALL}" ]; then
-  if ! $(wp --allow-root core is-installed); then
+  if ! $(wp core is-installed); then
     if [ ! -z "$(ls -A /var/mnt/exports/sqldump_* 2> /dev/null)" ] &&
        [ ! -z "$(ls -A /var/mnt/exports/uploads_* 2> /dev/null)" ];
     then
       bash ./scripts/import.sh
     else
-      wp --allow-root core install \
+      wp core install \
         --title=${WORDPRESS_TITLE:-breeze} \
         --admin_user=${ADMIN_USER:-admin} \
         --admin_email=${ADMIN_EMAIL:-admin@admin.com} \
@@ -154,7 +154,7 @@ if [ -z "${SKIP_WP_CORE_INSTALL}" ]; then
         --url="${WORDPRESS_HOST_PROTOCOL:-http}://${WORDPRESS_HOST}"
 
       # Activate default plugins
-      wp --allow-root plugin activate \
+      wp plugin activate \
         post-duplicator \
         better-wp-security \
         classic-editor \
@@ -163,13 +163,13 @@ if [ -z "${SKIP_WP_CORE_INSTALL}" ]; then
         wp-rocket
 
       # Ensure correct permalink structure
-      wp --allow-root option set permalink_structure ${PERMALINK_STRUCTURE:-'/blog/%postname%/'}
+      wp option set permalink_structure ${PERMALINK_STRUCTURE:-'/blog/%postname%/'}
 
       # Enable breeze theme
-      wp --allow-root theme activate breeze
+      wp theme activate breeze
 
       # Ensure default posts to be removed
-      wp --allow-root post delete 1 2 3
+      wp post delete 1 2 3
     fi
   else
     echo "Wordpress is already installed: Skipping install!"
