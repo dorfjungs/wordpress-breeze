@@ -16,6 +16,7 @@ RUN composer global require hirak/prestissimo
 
 # Configure apache
 RUN a2enmod rewrite
+RUN echo 'Listen 8080' > /etc/apache2/ports.conf
 COPY ./config/apache-vhost.conf /etc/apache2/sites-available/0-wordpress.conf
 RUN a2dissite 000-default.conf && a2ensite 0-wordpress.conf
 
@@ -46,7 +47,7 @@ RUN ln -sf /var/mnt/src $THEME_DIR/src && \
     ln -sf /var/mnt/composer /var/www/app/composer
 
 # Set correct permissions
-RUN chown -R www-data:www-data /var/www/app
+RUN chown -R www-data:www-data /var/www/
 
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh
@@ -55,5 +56,8 @@ RUN chmod +x entrypoint.sh
 # Download wait-for
 RUN wget -O /wait-for.sh https://raw.githubusercontent.com/eficode/wait-for/8d9b4446df0b71275ad1a1c68db0cc2bb6978228/wait-for
 RUN chmod +x /wait-for.sh
+
+# Run as user 'www-data'
+USER 1000
 
 ENTRYPOINT [ "/entrypoint.sh" ]
