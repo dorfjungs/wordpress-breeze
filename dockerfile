@@ -9,7 +9,6 @@ RUN apt-get -q update && apt-get -qy install \
 
 # Install wp-cli
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x ./wp-cli.phar && mv wp-cli.phar /usr/bin/wp
-RUN echo 'alias wp="wp --allow-root"' >>  ~/.bashrc
 
 # Install improved package installer for composer
 RUN composer global require hirak/prestissimo
@@ -37,6 +36,10 @@ VOLUME /var/mnt/src \
        /var/mnt/uploads \
        /var/mnt/vendor \
        /var/mnt/exports
+
+# Set correct permissions
+RUN chown -R 1000:1000 /var/mnt/*
+RUN ls -al /var/mnt
 
 # Create symlink
 RUN ln -sf /var/mnt/src $THEME_DIR/src && \
