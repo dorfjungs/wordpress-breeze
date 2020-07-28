@@ -28,18 +28,22 @@ ENV THEME_DIR=/var/www/app/content/themes/breeze
 # Add app
 COPY . /var/www/app
 
-# Expose volumes
-VOLUME /var/mnt/src \
+# # Expose volumes
+# VOLUME /var/mnt/src \
+#        /var/mnt/assets \
+#        /var/mnt/templates \
+#        /var/mnt/composer \
+#        /var/mnt/uploads \
+#        /var/mnt/vendor \
+#        /var/mnt/exports
+
+RUN mkdir -p /var/mnt/src \
        /var/mnt/assets \
        /var/mnt/templates \
        /var/mnt/composer \
        /var/mnt/uploads \
        /var/mnt/vendor \
        /var/mnt/exports
-
-# Set correct permissions
-RUN chown -R 1000:1000 /var/mnt/*
-RUN ls -al /var/mnt
 
 # Create symlink
 RUN ln -sf /var/mnt/src $THEME_DIR/src && \
@@ -50,6 +54,7 @@ RUN ln -sf /var/mnt/src $THEME_DIR/src && \
     ln -sf /var/mnt/composer /var/www/app/composer
 
 # Set correct permissions
+RUN chown -R www-data:www-data /var/mnt/
 RUN chown -R www-data:www-data /var/www/
 
 # Copy entrypoint
