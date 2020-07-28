@@ -23,6 +23,8 @@ app:
     DATABASE_NAME: someDbName
     DATABASE_USER: someDbUser
     DATABASE_PASS: aComplexDatabasePassword
+  ports:
+    - 80:8080
 ```
 
 ## The entrypoint

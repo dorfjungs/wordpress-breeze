@@ -34,5 +34,5 @@ RUN composer install \
 
 # Simple health check for production
 HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=4 \
-  CMD curl -f http://localhost:80/ || exit 1
+  CMD curl -f http://localhost:8080/ || exit 1
 ```

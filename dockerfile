@@ -9,13 +9,13 @@ RUN apt-get -q update && apt-get -qy install \
 
 # Install wp-cli
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x ./wp-cli.phar && mv wp-cli.phar /usr/bin/wp
-RUN echo 'alias wp="wp --allow-root"' >>  ~/.bashrc
 
 # Install improved package installer for composer
 RUN composer global require hirak/prestissimo
 
 # Configure apache
 RUN a2enmod rewrite
+RUN echo 'Listen 8080' > /etc/apache2/ports.conf
 COPY ./config/apache-vhost.conf /etc/apache2/sites-available/0-wordpress.conf
 RUN a2dissite 000-default.conf && a2ensite 0-wordpress.conf
 
@@ -28,8 +28,7 @@ ENV THEME_DIR=/var/www/app/content/themes/breeze
 # Add app
 COPY . /var/www/app
 
-# Expose volumes
-VOLUME /var/mnt/src \
+RUN mkdir -p /var/mnt/src \
        /var/mnt/assets \
        /var/mnt/templates \
        /var/mnt/composer \
@@ -46,7 +45,8 @@ RUN ln -sf /var/mnt/src $THEME_DIR/src && \
     ln -sf /var/mnt/composer /var/www/app/composer
 
 # Set correct permissions
-RUN chown -R www-data:www-data /var/www/app
+RUN chown -R www-data:www-data /var/mnt/
+RUN chown -R www-data:www-data /var/www/
 
 # Copy entrypoint
 COPY entrypoint.sh /entrypoint.sh
@@ -55,5 +55,8 @@ RUN chmod +x entrypoint.sh
 # Download wait-for
 RUN wget -O /wait-for.sh https://raw.githubusercontent.com/eficode/wait-for/8d9b4446df0b71275ad1a1c68db0cc2bb6978228/wait-for
 RUN chmod +x /wait-for.sh
+
+# Run as user 'www-data'
+USER 1000
 
 ENTRYPOINT [ "/entrypoint.sh" ]
