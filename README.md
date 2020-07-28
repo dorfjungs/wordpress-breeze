@@ -9,7 +9,7 @@ I am asking myself the same question and couldn't find an answer to that - yet.
 This is simply a basic setup for a specific wordpress architecture to reduce the pain for the developers. It's packed into a docker container. So you basically have a package with the basic stuff required for a minimal wordpress setup (including plugins, settings, users etc.). You're welcome. You only need to attach the corresponding volumes in order to customize the instance. Sounds pretty simple? It is, indeed. But don't get me wrong, wordpress still sucks on a very high level and it will suck as long as there are developers supporting (and using) it. Me included, per se. So consider this package a painkiller for the agony that comes with wordpress.
 
 ## Documentation
-A more detailed documentation can be found [here](https://wordpress-breeze.github.io/).
+A more detailed documentation can be found [here](https://dorfjungs.github.io/wordpress-breeze).
 
 ## Development
 This whole package will be published by the dockerhub build automation. To trigger this you can simply push a tag and dockerhub handles the process for you.
