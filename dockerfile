@@ -28,15 +28,6 @@ ENV THEME_DIR=/var/www/app/content/themes/breeze
 # Add app
 COPY . /var/www/app
 
-# # Expose volumes
-# VOLUME /var/mnt/src \
-#        /var/mnt/assets \
-#        /var/mnt/templates \
-#        /var/mnt/composer \
-#        /var/mnt/uploads \
-#        /var/mnt/vendor \
-#        /var/mnt/exports
-
 RUN mkdir -p /var/mnt/src \
        /var/mnt/assets \
        /var/mnt/templates \
