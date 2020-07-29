@@ -59,4 +59,7 @@ RUN chmod +x /wait-for.sh
 # Run as user 'www-data'
 USER 1000
 
+# Container listens to :8080
+EXPOSE 8080
+
 ENTRYPOINT [ "/entrypoint.sh" ]
