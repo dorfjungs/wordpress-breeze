@@ -13,6 +13,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 # Install improved package installer for composer
 RUN composer global require hirak/prestissimo
 
+# Install php extension to generate Wordpress sitemaps
+RUN docker-php-ext-install simplexml
+
 # Configure apache
 RUN a2enmod rewrite
 RUN echo 'Listen 8080' > /etc/apache2/ports.conf
